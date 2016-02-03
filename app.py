@@ -2,6 +2,10 @@ import flask
 import string
 import urllib
 import bs4
+import re
+import simplejson as json
+from collections import Counter
+
 
 app = flask.Flask(__name__)
 
@@ -21,23 +25,36 @@ def cloud():
 
   url = base + '&retmax=' +str(num) + '&term='+search_string
 
-  a = bs4.BeautifulSoup( urllib.urlopen( url ),features="xml" )
+  a = bs4.BeautifulSoup( urllib.urlopen( url ), "lxml-xml" )
 
   base = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&retmode=XML'
-  base='http://www.ncbi.nlm.nih.gov/pmc/oai/oai.cgi.'
 
-  url = base +'&id=' + string.join( [ v.get_text() for v in a.findAll('Id') ], ',')
-  a = bs4.BeautifulSoup( urllib.urlopen( url ),features="xml" )
+  url = base +'&id=' + string.join( [ v.get_text() for v in a.findAll('Id') ], ',')+'&retmax=' +str(num)
+
+  a = bs4.BeautifulSoup( urllib.urlopen( url ),"lxml-xml" )
+
+  s=''
+  for v in a.findAll('AbstractText'): s+= v.get_text()
+
+  data=[]
+  for v in parse(s):
+    data.append( {'key':v[0], 'value':v[1]} )
+
+  return flask.render_template('word_cloud.html', data = json.dumps(data) )
 
 
-  print url
 
-  return a.get_text()
+def parse( s ):
+  #s=open('./source').readlines()[0]
+  stp_wrds = { w.strip('\n') for w in open('./static/stop_words.txt').readlines()}
 
+  word_list = Counter(string.split(re.sub('[^A-Za-z0-9\-]+', ' ', s) ))
+  for w in word_list.keys():
+    if string.lower(w) in stp_wrds: del word_list[w]
+    elif unicode.isdigit(w): del word_list[w]
 
-
-
-
+  return word_list.most_common(1000)
 
 if __name__ == '__main__':
   app.run( debug = True )
+  #parse()
