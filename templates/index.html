@@ -1,14 +1,16 @@
 <!DOCTYPE HTML>
 <HEAD>
-  <title>Scientific Word Cloud</title>
+  <title>Scientific Abstract Cloud</title>
 </HEAD>
 <BODY>
-  <h1>Scientific Cloud</h1>
+  <h1>Scientific Abstract Cloud</h1>
+
+  <p>This application will generate a word cloud from PubMed abstracts. Use the textbox below to enter your full name or other search paramter.
+  </p>
 
    <form method='post' action='cloud' >
       <p> Enter search paramter:
         <input type='text' name='search_term'/>
-        <input type='submit' name='Submit' />
       </p>
 
      <p> Maximum number of papers to compile
@@ -17,6 +19,8 @@
          <option value=50>50</option>
          <option value=100>100</option>
        </select>
+
+       <input type='submit' name='Submit' />
      </p>
 
     </form>
