@@ -1,3 +1,4 @@
+import os
 import flask
 import string
 import urllib
@@ -56,5 +57,5 @@ def parse( s ):
   return word_list.most_common(1000)
 
 if __name__ == '__main__':
-  app.run( port=33507 )
-  #parse()
+  port = int(os.environ.get("PORT", 5000))
+  app.run(host='0.0.0.0', port=port)
