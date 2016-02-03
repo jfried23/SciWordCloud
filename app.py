@@ -56,5 +56,5 @@ def parse( s ):
   return word_list.most_common(1000)
 
 if __name__ == '__main__':
-  app.run( debug = True )
+  app.run( port=33507 )
   #parse()
