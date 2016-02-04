@@ -53,6 +53,8 @@ def parse( s ):
   for w in word_list.keys():
     if string.lower(w) in stp_wrds: del word_list[w]
     elif unicode.isdigit(w): del word_list[w]
+    elif unicode.isdigit(w[0]): del word_list[w]
+    elif w[0] == '-': del word_list[w]		
 
   return word_list.most_common(1000)
 
